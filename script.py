@@ -23,9 +23,9 @@ def extract_tables_from_pdf(pdf_files):
     return final_df
 
 def main():
-    st.set_page_config(page_title="SBI Transactions Converter", page_icon=":bank:")
-    st.title("SBI Transactions Converter")
-    st.subheader("This application extracts transaction tables from PDF files and converts them into CSV format.")
+    st.set_page_config(page_title="Transactions Converter", page_icon=":bank:")
+    st.title(":bank: Transactions Converter")
+    st.text("This application extracts transaction tables from PDF files and converts them into CSV format. It currently works for State Bank of India (SBI).")
     
     # Allow the user to upload multiple PDF files
     pdf_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
