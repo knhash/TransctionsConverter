@@ -2,8 +2,7 @@ import streamlit as st
 import pandas as pd
 import pdfplumber
 
-from transaction_processing import Variant
-from transaction_processing import epf_transactions, sbi_transactions, sgb_transactions
+from transaction_processing import *
 
 def extract_tables_from_pdf(pdf_files, variant=None):
     all_tables = []
@@ -14,13 +13,7 @@ def extract_tables_from_pdf(pdf_files, variant=None):
             for page in pdf.pages:
                 tables = page.extract_tables()
                 for table in tables:
-                    df = None
-                    if variant == Variant.SBI:
-                        df = sbi_transactions(table=table)
-                    elif variant == Variant.EPF and page.page_number == 1:
-                        df = epf_transactions(table=table)
-                    elif variant == Variant.SGB:
-                        df = sgb_transactions(table=table)
+                    df = eval(variant.name)().transactions(table=table)
                     tables_in_pdf.append(df)
 
             # Generate txn_id based on transaction date and an incremental number if multiple transactions on the same date
@@ -35,13 +28,14 @@ def extract_tables_from_pdf(pdf_files, variant=None):
 def main():
     st.set_page_config(page_title="Transactions Converter", page_icon=":bank:")
     st.title(":bank: Transactions Converter")
-    variant = "SBI Txns"
+    variant = "SBI"
     st.markdown("This application extracts transaction tables from **PDF files** and converts them into **CSV**.")
     with st.sidebar:
         variant = st.radio("Select the variant of PDF you want to convert.", [e.value for e in Variant])
         variant = Variant(variant)
 
     st.subheader("Working for :rainbow[{}] transactions".format(variant.value))
+    st.write(eval(variant.name)().help)
     
     # Allow the user to upload multiple PDF files
     pdf_files = st.file_uploader("Upload PDF files", type="pdf", accept_multiple_files=True)
