@@ -72,9 +72,36 @@ class SGB:
         df = df[['Txn Date', 'Order ID', 'Unit', 'Amount', 'Gold Rate']]
         return df
     
+class PPF:
+    title = "Public Provident Fund"
+    table = pd.DataFrame()
+
+    def __init__(self):
+        self.help = """
+        **How to generate report**
+        1. Login to your SBI account.
+        2. Go to the **Account Statement** section.
+        3. Select the **PPF Account Number** and **Date Range**.
+        4. Select **Download in PDF** format.
+        5. Click on **Go**.
+        6. Upload the downloaded PDF file(s) here.
+        """
+
+    def transactions(self, table):
+        # Ignore the first table
+        if table[0][0] == "Account Number":
+            return pd.DataFrame()
+        
+        df = pd.DataFrame(table[1:], columns=table[0])
+        df['Date (Value Date)'] = df['Date (Value Date)'].apply(lambda x: x.split('(')[0].strip())
+        df.rename(columns={'Date (Value Date)':'Txn Date'}, inplace=True)
+        df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%d-%b-%Y').dt.date
+        df = df[['Txn Date', 'Narration', 'Ref/Cheque No.', 'Debit', 'Credit', 'Balance']]
+        return df
 
 
 class Variant(Enum):
     SBI=SBI().title
     EPF=EPF().title
     SGB=SGB().title
+    PPF=PPF().title

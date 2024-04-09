@@ -46,7 +46,7 @@ def main():
             tables_df = extract_tables_from_pdf(pdf_files, variant=variant)
             
             # Offer the option to download the sorted table as a CSV file
-            st.download_button(label="Download Transactions as CSV", data=tables_df.to_csv(index=False), file_name="transactions.csv", mime="text/csv")
+            st.download_button(label="Download Transactions as CSV", data=tables_df.to_csv(index=False), file_name="{}_transactions.csv".format(variant.name), mime="text/csv")
             
             # Display the sorted table
             st.write("Transactions:")
