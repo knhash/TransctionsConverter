@@ -3,7 +3,7 @@ import pandas as pd
 import pdfplumber
 
 from transaction_processing import Variant
-from transaction_processing import epf_transactions, sbi_transactions
+from transaction_processing import epf_transactions, sbi_transactions, sgb_transactions
 
 def extract_tables_from_pdf(pdf_files, variant=None):
     all_tables = []
@@ -19,6 +19,8 @@ def extract_tables_from_pdf(pdf_files, variant=None):
                         df = sbi_transactions(table=table)
                     elif variant == Variant.EPF and page.page_number == 1:
                         df = epf_transactions(table=table)
+                    elif variant == Variant.SGB:
+                        df = sgb_transactions(table=table)
                     tables_in_pdf.append(df)
 
             # Generate txn_id based on transaction date and an incremental number if multiple transactions on the same date
