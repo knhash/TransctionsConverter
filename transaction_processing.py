@@ -96,7 +96,7 @@ class PPF:
         ref_checq_col = df.keys()[3]
         df.rename(columns={ref_checq_col:'Ref No./Cheque No.'}, inplace=True)
         df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%d %b %Y').dt.date
-        df = df[['Txn Date', 'Ref No./Cheque No.', 'Debit', 'Credit', 'Balance']]
+        df = df[['Txn Date', 'Description', 'Ref No./Cheque No.', 'Debit', 'Credit', 'Balance']]
         return df
 
 
