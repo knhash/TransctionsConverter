@@ -93,10 +93,10 @@ class PPF:
             return pd.DataFrame()
         
         df = pd.DataFrame(table[1:], columns=table[0])
-        df['Date (Value Date)'] = df['Date (Value Date)'].apply(lambda x: x.split('(')[0].strip())
-        df.rename(columns={'Date (Value Date)':'Txn Date'}, inplace=True)
-        df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%d-%b-%Y').dt.date
-        df = df[['Txn Date', 'Narration', 'Ref/Cheque No.', 'Debit', 'Credit', 'Balance']]
+        ref_checq_col = df.keys()[3]
+        df.rename(columns={ref_checq_col:'Ref No./Cheque No.'}, inplace=True)
+        df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%d %b %Y').dt.date
+        df = df[['Txn Date', 'Ref No./Cheque No.', 'Debit', 'Credit', 'Balance']]
         return df
 
 
