@@ -99,9 +99,39 @@ class PPF:
         df = df[['Txn Date', 'Description', 'Ref No./Cheque No.', 'Debit', 'Credit', 'Balance']]
         return df
 
+class STK:
+    title = "Stocks (Zerodha)"
+    table = pd.DataFrame()
+
+    def __init__(self):
+        self.help = """
+        **How to generate report**
+        1. Login to your Kite account, go to Console.
+        2. Click on **Funds**.
+        3. Click on **Statement**.
+        4. Select the **Category**.
+        5. Select the date range and click on **View**.
+        6. The statement can be downloaded in XLSX or CSV format by clicking on **Download XLSX|CSV**.
+        """
+
+    def transactions(self, table):
+        df = table.drop(index=[0, len(table)-1])
+        df.rename(columns={
+            'particulars': 'Description',
+            'voucher_type': 'Reference',
+            'posting_date': 'Txn Date',
+            'debit': 'Debit',
+            'credit': 'Credit',
+            'net_balance': 'Balance'
+        }, inplace=True)
+        df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%Y-%m-%d').dt.date
+        df = df[['Txn Date', 'Description', 'Reference', 'Debit', 'Credit', 'Balance']]
+        return df
+
 
 class Variant(Enum):
     SBI=SBI().title
     EPF=EPF().title
     SGB=SGB().title
     PPF=PPF().title
+    STK=STK().title
