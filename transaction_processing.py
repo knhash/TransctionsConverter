@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+from datetime import datetime
 
 from enum import Enum
 import pandas as pd
@@ -115,21 +116,8 @@ class STK:
         """
 
     def transactions(self, table):
-        df = table.drop(index=[0, len(table)-1])
-        df.rename(columns={
-            'particulars': 'Description',
-            'voucher_type': 'Reference',
-            'posting_date': 'Txn Date',
-            'debit': 'Debit',
-            'credit': 'Credit',
-            'net_balance': 'Balance'
-        }, inplace=True)
-        df['Txn Date'] = pd.to_datetime(df['Txn Date'], format='%Y-%m-%d').dt.date
-        df['Debit'] = df.Debit.apply(lambda x: round(x, 2))
-        df['Balance'] = df.Balance.apply(lambda x: round(x, 2))
-        df['Credit'] = df.Credit.apply(lambda x: round(x, 2))
-        df = df[['Txn Date', 'Description', 'Reference', 'Debit', 'Credit', 'Balance']]
-        return df
+        table['Txn Date'] = datetime.now().date()
+        return table
 
 
 class Variant(Enum):
